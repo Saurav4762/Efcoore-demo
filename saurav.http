@@ -1,0 +1,6 @@
+@saurav_HostAddress = http://localhost:5070
+
+GET {{saurav_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
