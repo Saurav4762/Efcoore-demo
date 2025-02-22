@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using saurav.Data;
+using saurav.Service;
+using saurav.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +9,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
-
-
+builder.Services.AddScoped<ICourseServices, CourseServices>();
+builder.Services.AddScoped<IStudentServices, StudentService>();
 
 
 builder.Services.AddDbContext<EfCoreDbcontext>(b =>
