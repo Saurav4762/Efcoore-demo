@@ -1,6 +1,6 @@
 ﻿namespace saurav.Contratcs.Response;
 
-public class CourseRresponseDto
+public class CourseResponseDto
 {
     public int CourseId { get; set; }
     public string CourseName { get; set; }

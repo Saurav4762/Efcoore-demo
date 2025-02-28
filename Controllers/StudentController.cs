@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using saurav.Contratcs.Request;
 using saurav.Contratcs.Response;
+using saurav.Repository.Interface;
 using saurav.Service;
 using saurav.Service.Interface;
 
@@ -19,31 +20,24 @@ public class StudentController : ControllerBase
     private readonly EfCoreDbcontext _dbcontext;
     
     private readonly IStudentServices _studentService;
+    
+    private readonly IStudentRepository _studentRepository;
 
-    public StudentController(EfCoreDbcontext dbcontext, IStudentServices studentService)
+    public StudentController(EfCoreDbcontext dbcontext, IStudentServices studentService, IStudentRepository studentRepository)
     {
         _dbcontext = dbcontext;
         _studentService = studentService;
-
+        _studentRepository = studentRepository;
     }
 
 
     //GET: api/student
     [HttpGet]
-    public async Task<IActionResult> GetStudents()
+    public async Task<IActionResult> GetStudents(int id )
     {
         try
         {
-            var students = await _dbcontext.Students.Select(x => new StudentResponseDto()
-            {
-                StudentId = x.Id,
-                Address = x.Address,
-                Email = x.Email,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Phone = x.Phone,
-                CourseId = x.CourseId,
-            }).ToListAsync();
+            var students = await _studentRepository.GetStudent(id);
             return Ok(students);
         }
         catch (Exception e)
@@ -58,12 +52,7 @@ public class StudentController : ControllerBase
     {
         try
         {
-            var student = await _dbcontext.Students.FindAsync(id);
-
-            if (student == null)
-            {
-                throw new Exception("Student not found");
-            }
+          var student = await _studentRepository.GetStudentById(id);
 
             return Ok(student);
         }

@@ -1,5 +1,4 @@
 ﻿using saurav.Entities;
-
 namespace saurav.Service.Interface;
 
 public interface ICourseServices

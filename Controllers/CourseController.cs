@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using saurav.Contratcs.Response;
+using saurav.Repository.Interface;
 using saurav.Service.Interface;
 
 namespace saurav.Controllers;
@@ -15,11 +16,13 @@ public class CourseController : ControllerBase
 {
     private readonly EfCoreDbcontext _context;
     private readonly ICourseServices _courseService;
+    private readonly ICourseRepository _courseRepository;
 
-    public CourseController(EfCoreDbcontext context, ICourseServices courseService)
+    public CourseController(EfCoreDbcontext context, ICourseServices courseService, ICourseRepository courseRepository)
     {
         _context = context;
         _courseService = courseService ;
+        _courseRepository = courseRepository;
     }
     
     //POST
@@ -41,16 +44,12 @@ public class CourseController : ControllerBase
     
     //GET
     [HttpGet]
-    public async Task<IActionResult> GetAllCourses()
+    public async Task<IActionResult> GetAllCourses(CourseResponseDto output)
     {
         try
         {
-            var courses = await _context.Courses.Select(x=> new CourseRresponseDto()
-            {
-                CourseDescription = x.CourseDescription,
-                CourseName = x.CourseName,
-            }).ToListAsync();
-            return Ok(courses);
+            var course = await _courseRepository.GetCourse(output);
+            return Ok(course);
 
         }
         catch (Exception e)
@@ -61,16 +60,11 @@ public class CourseController : ControllerBase
      
     //Get  : api/course/{id}
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetCourse(int id)
+    public async Task<IActionResult> GetCourse(int id,CourseResponseDto output)
     {
         try
         {
-            var course = await _context.Courses.FindAsync(id);
-
-            if (course == null)
-            {
-                throw new Exception("Course not found");
-            }
+            var course = await _courseRepository.GetCourseById(id, output);
 
             return Ok(course);
 
@@ -83,11 +77,11 @@ public class CourseController : ControllerBase
     
     //PUT : api/course/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCourse(int id, CourseRresponseDto check)
+    public async Task<IActionResult> UpdateCourseAsync(int id, CourseRequestDto input)
     {
         try
         {
-            var course = await _context.Courses.FindAsync(id);
+            var course = await _courseService.UpdateCourseAsync(id,input);
             
             return Ok(course);
 
@@ -101,11 +95,11 @@ public class CourseController : ControllerBase
     
     //DELETE : api/course/{id0}
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCourse(int id)
+    public async Task<IActionResult> DeleteCourseAsync(int id)
     {
         try
         {
-            await _context.Courses.FindAsync(id);
+            await _courseService.DeleteCourseAsync(id);
             
             return Ok("Course deleted");
 
