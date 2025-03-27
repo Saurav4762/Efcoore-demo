@@ -38,7 +38,8 @@ public class StudentRepository : IStudentRepository
     
     public Task<List<StudentResponseDto>> GetStudent(int id)
     {
-        var student = _dbcontext.Students.Select(x=> new StudentResponseDto
+        var student = _dbcontext.Students
+        .Select(x=> new StudentResponseDto
         {
             FirstName = x.FirstName,
             LastName = x.LastName,

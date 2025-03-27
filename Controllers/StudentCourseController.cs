@@ -8,23 +8,23 @@ using saurav.Service.Interface;
 
 namespace saurav.Controllers;
 
-[Route("api/[controller]")]
+
 [ApiController]
-public class StudentCourseController : ControllerBase
+internal class StudentCourseController : ControllerBase
 {
-    private readonly EfCoreDbcontext _context;
+    
     private readonly IStudentCourseRepository _studentCourseRepository;
     private readonly IStudentCourseService _studentCourseService;
 
-    public StudentCourseController(EfCoreDbcontext context, IStudentCourseRepository studentCourseRepository,
+    public StudentCourseController( IStudentCourseRepository studentCourseRepository,
         IStudentCourseService studentCourseService)
     {
-        _context = context;
+      
         _studentCourseRepository = studentCourseRepository;
         _studentCourseService = studentCourseService;
     }
 
-    [HttpGet]
+    [HttpGet("api/studentCourse")]
     public async Task<IActionResult> GetAll()
     {
         try
@@ -40,7 +40,7 @@ public class StudentCourseController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("api/studentCourse/{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         try
@@ -56,14 +56,15 @@ public class StudentCourseController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> post([FromBody] StudentCourseRequestDto dto)
+    [HttpPost("api/studentCourse")]
+            
+    public async Task<IActionResult> Post ([FromBody] StudentCourseRequestDto dto)
     {
         try
         {
-            var studedntCourse = await _studentCourseService.AddAsync(dto);
+            var studentCourse = await _studentCourseService.AddAsync(dto);
 
-            return Ok(studedntCourse);
+            return Ok(studentCourse);
 
         }
         catch (Exception e)
@@ -72,7 +73,7 @@ public class StudentCourseController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("api/studentCourse{id}")]
     public async Task<IActionResult> Put(int id, [FromBody] StudentCourseRequestDto dto)
     {
         try
@@ -87,7 +88,7 @@ public class StudentCourseController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("api/studentCourse{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         try
